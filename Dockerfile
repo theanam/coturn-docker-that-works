@@ -1,0 +1,21 @@
+FROM alpine:3.10
+
+LABEL MAINTAINER ANAM AHMED
+LABEL EMAIL anam.ahmed.a@gmail.com
+## DEFAULTS
+ENV DOMAIN example.com
+ENV TURN_PORT 3478
+# usually same as DOMAIN
+ENV TURN_REALM example.com
+ENV TURN_MIN_PORT 49152
+ENV TURN_MAX_PORT 65535
+ENV TURN_USER turn
+ENV TURN_PASSWORD turn
+ENV TURN_QUOTA 60
+## INSTALL DEPENDCIES
+RUN apk --no-cache add openssl coturn
+WORKDIR /opt
+## SELF SIGNED SSL CERTS IF NO SSL CERTS SUPPLIED
+COPY ./utils .
+RUN ./generate_ssl.sh
+CMD ./turn-docker-entrypoint.sh
